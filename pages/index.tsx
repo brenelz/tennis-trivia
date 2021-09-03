@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Player, uniqueCountries, top100Players } from "../lib/players";
-import GameCompleted from "../components/GameCompleted";
 
 type HomeProps = {
   players: Player[];
@@ -118,7 +117,15 @@ export default function Home({ players, countries }: HomeProps) {
             </p>
           </div>
         ) : (
-          <GameCompleted playAgain={playAgain} />
+          <div>
+            <button
+              autoFocus
+              onClick={playAgain}
+              className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto"
+            >
+              Play Again
+            </button>
+          </div>
         )}
       </div>
     </div>
