@@ -2,7 +2,7 @@
 
 - link to article
 
-## What we are building
+## What we build
 
 - shows one player name randomly, and the user must pick their country
 - 5 rounds, keep track of score
