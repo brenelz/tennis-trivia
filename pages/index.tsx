@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Player, uniqueCountries, top100Players } from "../lib/players";
+import GameCompleted from "../components/GameCompleted";
 
 type HomeProps = {
   players: Player[];
@@ -12,7 +13,6 @@ export default function Home({ players, countries }: HomeProps) {
   const [pickedCountry, setPickedCountry] = useState("");
   const [playersData, setPlayersData] = useState(players);
   const [status, setStatus] = useState(null);
-
   const inputRef = useRef(null);
 
   const player = playersData[currentStep];
@@ -55,18 +55,9 @@ export default function Home({ players, countries }: HomeProps) {
         <div>
           <h2>{player.full_name}</h2>
 
-          {status?.status === "correct" && (
+          {status && (
             <div>
-              You are correct. It is {status.country}{" "}
-              <button autoFocus onClick={nextStep}>
-                Next
-              </button>
-            </div>
-          )}
-
-          {status?.status === "incorrect" && (
-            <div>
-              You are incorrect. It is {status.country}{" "}
+              You are {status.status}. It is {status.country}{" "}
               <button autoFocus onClick={nextStep}>
                 Next
               </button>
@@ -97,12 +88,7 @@ export default function Home({ players, countries }: HomeProps) {
           )}
         </div>
       ) : (
-        <div>
-          <p>Completion</p>
-          <button autoFocus onClick={playAgain}>
-            Play Again
-          </button>
-        </div>
+        <GameCompleted playAgain={playAgain} />
       )}
     </div>
   );
