@@ -1,10 +1,8 @@
 # Tennis Trivia - Next.js Netlify
 
-To deploy to netlify you can just hit the following button.
-
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/brenelz/tennis-trivia)
 
-The only other setup required is adding the following environment variable.
+The only other setup required for netlify is adding the following environment variable.
 
 ```
 NEXT_PUBLIC_API_URL=https://your-netlify-url.app
