@@ -1,8 +1,16 @@
 # Tennis Trivia - Next.js Netlify
 
-- link to article
+To deploy to netlify you can just hit the following button.
 
-## What we build
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/brenelz/tennis-trivia)
+
+The only other setup required is adding the following environment variable.
+
+```
+NEXT_PUBLIC_API_URL=https://your-netlify-url.app
+```
+
+## What we built
 
 - shows one player name randomly, and the user must pick their country
 - 5 rounds, keep track of score
@@ -14,9 +22,3 @@
 - store highscores in supabase
 - choose difficulty (would change the rank of players selected)
 - challenge other users
-
-```
-git clone github.com/brenelz/tennis-trivia
-```
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/brenelz/tennis-trivia
