@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Player } from "../lib/players";
+import { useEffect } from "react";
 import { getHighScores, Highscore } from "../lib/highscores";
 import Highscores from "../components/Highscores";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
+import { signIn } from "../lib/auth";
+import { GetServerSideProps } from "next";
 
 type HomeProps = {
   highscores: Highscore[];
@@ -19,11 +20,6 @@ export default function Home({ highscores }: HomeProps) {
     }
   }, []);
 
-  const signIn = async () => {
-    await supabase.auth.signIn({
-      provider: "google",
-    });
-  };
   return (
     <div>
       <div>
@@ -41,7 +37,7 @@ export default function Home({ highscores }: HomeProps) {
   );
 }
 
-export async function getServerSideProps({ req }) {
+export const getServerSideProps: GetServerSideProps = async () => {
   const highscores = await getHighScores();
 
   return {
@@ -49,4 +45,4 @@ export async function getServerSideProps({ req }) {
       highscores,
     },
   };
-}
+};

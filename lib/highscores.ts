@@ -1,4 +1,5 @@
-import { supabase } from "./supabase";
+import { supabase } from "../utils/supabase";
+import { GAME_CONFIG } from "./game";
 
 export type Highscore = {
   id: number;
@@ -24,4 +25,19 @@ export const getHighScores = async () => {
     .limit(10);
 
   return highscores;
+};
+
+export const addHighscore = async (
+  user_id: string,
+  name: string,
+  score: number
+) => {
+  await supabase.from("users").upsert({ id: user_id, name });
+  await supabase.from("highscores").insert([
+    {
+      user_id: user_id,
+      num_correct: score,
+      num_total: GAME_CONFIG.NUMBER_OF_ROUNDS,
+    },
+  ]);
 };

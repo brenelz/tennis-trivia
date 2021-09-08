@@ -1,6 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { Player } from "../lib/players";
-import { getHighScores, Highscore } from "../lib/highscores";
+import { ReactNode } from "react";
 
 type MainProps = {
   children: ReactNode;
