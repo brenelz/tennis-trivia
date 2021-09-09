@@ -1,39 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  Player,
-  uniqueCountries,
-  top100Players,
-  getPlayers,
-} from "../lib/players";
-import { getHighScores, Highscore } from "../lib/highscores";
+import { useEffect, useState } from "react";
+import { Player, uniqueCountries, getPlayers } from "../lib/players";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-import { GAME_CONFIG } from "../lib/game";
+import { GameState } from "../lib/game";
 import GameCompleted from "../components/GameCompleted";
 import PlayerCard from "../components/PlayerCard";
 import { GetServerSideProps } from "next";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 
 type GameProps = {
   countries: string[];
 };
 
-type Status = {
-  status: string;
-  country: string;
+const initialGameState: GameState = {
+  currentStep: 0,
+  score: 0,
+  pickedCountry: "",
+  status: null,
 };
 
 export default function Game({ countries }: GameProps) {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [score, setScore] = useState(0);
-  const [pickedCountry, setPickedCountry] = useState("");
-  const [status, setStatus] = useState<Status | null>(null);
-  const queryClient = useQueryClient();
+  const [gameState, setGameState] = useState(initialGameState);
 
   const players = useQuery<Player[]>("players", getPlayers);
 
-  const player = players.data && players.data[currentStep];
+  const player = players.data && players.data[gameState.currentStep];
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -42,28 +34,6 @@ export default function Game({ countries }: GameProps) {
     }
   }, [router]);
 
-  const guessCountry = () => {
-    if (player?.country.toLowerCase() === pickedCountry.toLowerCase()) {
-      setStatus({ status: "correct", country: player.country });
-      setScore(score + 1);
-    } else {
-      setStatus({ status: "incorrect", country: player?.country || "" });
-    }
-  };
-
-  const nextStep = () => {
-    setPickedCountry("");
-    setCurrentStep(currentStep + 1);
-    setStatus(null);
-  };
-
-  const playAgain = async () => {
-    setPickedCountry("");
-    setCurrentStep(0);
-    setScore(0);
-    queryClient.invalidateQueries("players");
-  };
-
   return (
     <div>
       <div>
@@ -71,16 +41,11 @@ export default function Game({ countries }: GameProps) {
           <PlayerCard
             countries={countries}
             player={player}
-            score={score}
-            guessCountry={guessCountry}
-            currentStep={currentStep}
-            nextStep={nextStep}
-            setPickedCountry={setPickedCountry}
-            status={status}
-            pickedCountry={pickedCountry}
+            gameState={gameState}
+            setGameState={setGameState}
           />
         ) : (
-          <GameCompleted score={score} playAgain={playAgain} />
+          <GameCompleted gameState={gameState} setGameState={setGameState} />
         )}
       </div>
     </div>

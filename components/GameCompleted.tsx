@@ -3,37 +3,43 @@ import { supabase } from "../utils/supabase";
 import { addHighscore, getHighScores, Highscore } from "../lib/highscores";
 import { getLoggedinUsersName } from "../lib/users";
 import { useQueryClient } from "react-query";
+import { GameState } from "../lib/game";
 
 type GameCompletedProps = {
-  score: number;
-  playAgain: () => Promise<void>;
+  gameState: GameState;
+  setGameState: Dispatch<SetStateAction<GameState>>;
 };
 
 export default function GameCompleted({
-  score,
-  playAgain,
+  gameState,
+  setGameState,
 }: GameCompletedProps) {
   const [submittedHighscore, setSubmittedHighscore] = useState(false);
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    let isMounted = true;
     async function getName() {
       const session = supabase.auth.session();
       if (session && session.user) {
         const name = await getLoggedinUsersName(session.user.id);
-        if (name) {
+        if (name && isMounted) {
           setName(name);
         }
       }
     }
     getName();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const submitHighscore = async () => {
     const session = supabase.auth.session();
     if (session && session.user) {
-      await addHighscore(session.user.id, name, score);
+      await addHighscore(session.user.id, name, gameState.score);
 
       const highscores = await getHighScores();
       if (highscores) {
@@ -43,9 +49,15 @@ export default function GameCompleted({
     }
   };
 
-  const playAgain2 = () => {
+  const playAgain = async () => {
     setSubmittedHighscore(false);
-    playAgain();
+    setGameState({
+      ...gameState,
+      pickedCountry: "",
+      currentStep: 0,
+      status: null,
+    });
+    queryClient.invalidateQueries("players");
   };
 
   return (
@@ -72,7 +84,7 @@ export default function GameCompleted({
       <p>
         <button
           autoFocus
-          onClick={playAgain2}
+          onClick={playAgain}
           className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto"
         >
           Play Again

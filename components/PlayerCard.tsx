@@ -1,37 +1,57 @@
 import { Player } from "../lib/players";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { GameState } from "../lib/game";
 
 type PlayerCardProps = {
   countries: string[];
   player: Player | undefined;
-  score: number;
-  currentStep: number;
-  nextStep: () => void;
-  guessCountry: () => void;
-  setPickedCountry: (value: SetStateAction<string>) => void;
-  pickedCountry: string;
-  status: {
-    status: string;
-    country: string;
-  } | null;
+  gameState: GameState;
+  setGameState: Dispatch<SetStateAction<GameState>>;
 };
 
 export default function PlayerCard({
   countries,
   player,
-  score,
-  currentStep,
-  nextStep,
-  guessCountry,
-  setPickedCountry,
-  pickedCountry,
-  status,
+  gameState,
+  setGameState,
 }: PlayerCardProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef?.current?.focus();
-  }, [currentStep]);
+  }, [gameState.currentStep]);
+
+  const guessCountry = () => {
+    if (
+      player?.country.toLowerCase() === gameState.pickedCountry.toLowerCase()
+    ) {
+      setGameState({
+        ...gameState,
+        status: {
+          status: "correct",
+          country: player.country,
+        },
+        score: gameState.score + 1,
+      });
+    } else {
+      setGameState({
+        ...gameState,
+        status: {
+          status: "incorrect",
+          country: player?.country || "",
+        },
+      });
+    }
+  };
+
+  const nextStep = () => {
+    setGameState({
+      ...gameState,
+      pickedCountry: "",
+      currentStep: gameState.currentStep + 1,
+      status: null,
+    });
+  };
 
   return (
     <div>
@@ -42,10 +62,11 @@ export default function PlayerCard({
         {player?.full_name}
       </h2>
 
-      {status && (
+      {gameState.status && (
         <div className="mt-4 text-lg leading-6 text-white">
           <p>
-            You are {status.status}. It is {status.country}{" "}
+            You are {gameState?.status?.status}. It is{" "}
+            {gameState?.status?.country}{" "}
           </p>
           <p>
             <button
@@ -59,7 +80,7 @@ export default function PlayerCard({
         </div>
       )}
 
-      {!status && (
+      {!gameState.status && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -69,8 +90,13 @@ export default function PlayerCard({
           <input
             list="countries"
             type="text"
-            value={pickedCountry}
-            onChange={(e) => setPickedCountry(e.target.value)}
+            value={gameState.pickedCountry}
+            onChange={(e) =>
+              setGameState({
+                ...gameState,
+                pickedCountry: e.target.value,
+              })
+            }
             ref={inputRef}
             className="p-2 outline-none"
             placeholder="Choose Country"
@@ -92,7 +118,7 @@ export default function PlayerCard({
       )}
 
       <p className="mt-4 text-lg leading-6 text-white">
-        <strong>Current score:</strong> {score}
+        <strong>Current score:</strong> {gameState.score}
       </p>
     </div>
   );
