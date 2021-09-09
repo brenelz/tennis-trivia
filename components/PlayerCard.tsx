@@ -1,20 +1,12 @@
 import { Player } from "../lib/players";
 import { useEffect, useRef } from "react";
-import { GameStateProps } from "../lib/game";
 
-type PlayerCardOwnProps = {
+type PlayerCardProps = {
   countries: string[];
   player: Player | undefined;
 };
 
-type PlayerCardProps = PlayerCardOwnProps & GameStateProps;
-
-export default function PlayerCard({
-  countries,
-  player,
-  gameState,
-  setGameState,
-}: PlayerCardProps) {
+export default function PlayerCard({ countries, player }: PlayerCardProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

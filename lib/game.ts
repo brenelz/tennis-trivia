@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, createContext } from "react";
 
 export const GAME_CONFIG = {
   NUMBER_OF_ROUNDS: 5,
@@ -20,3 +20,5 @@ export type GameStateProps = {
   gameState: GameState;
   setGameState: Dispatch<SetStateAction<GameState>>;
 };
+
+export const GameStateContext = createContext(null);

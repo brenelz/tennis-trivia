@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Player, uniqueCountries, getPlayers } from "../lib/players";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-import { GameState } from "../lib/game";
+import { GameState, GameStateContext } from "../lib/game";
 import GameCompleted from "../components/GameCompleted";
 import PlayerCard from "../components/PlayerCard";
 import { GetServerSideProps } from "next";
@@ -35,20 +35,15 @@ export default function Game({ countries }: GameProps) {
   }, [router]);
 
   return (
-    <div>
+    <GameStateContext.Provider value={{ gameState, setGameState }}>
       <div>
         {player ? (
-          <PlayerCard
-            countries={countries}
-            player={player}
-            gameState={gameState}
-            setGameState={setGameState}
-          />
+          <PlayerCard countries={countries} player={player} />
         ) : (
-          <GameCompleted gameState={gameState} setGameState={setGameState} />
+          <GameCompleted />
         )}
       </div>
-    </div>
+    </GameState.Provider>
   );
 }
 
