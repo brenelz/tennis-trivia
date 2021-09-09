@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export const GAME_CONFIG = {
   NUMBER_OF_ROUNDS: 5,
 };
@@ -12,4 +14,9 @@ export type GameState = {
   score: number;
   pickedCountry: string;
   status: Status | null;
+};
+
+export type GameStateProps = {
+  gameState: GameState;
+  setGameState: Dispatch<SetStateAction<GameState>>;
 };

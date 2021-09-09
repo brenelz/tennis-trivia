@@ -1,13 +1,13 @@
 import { Player } from "../lib/players";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { GameState } from "../lib/game";
+import { useEffect, useRef } from "react";
+import { GameStateProps } from "../lib/game";
 
-type PlayerCardProps = {
+type PlayerCardOwnProps = {
   countries: string[];
   player: Player | undefined;
-  gameState: GameState;
-  setGameState: Dispatch<SetStateAction<GameState>>;
 };
+
+type PlayerCardProps = PlayerCardOwnProps & GameStateProps;
 
 export default function PlayerCard({
   countries,

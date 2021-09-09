@@ -1,19 +1,14 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
-import { addHighscore, getHighScores, Highscore } from "../lib/highscores";
+import { addHighscore, getHighScores } from "../lib/highscores";
 import { getLoggedinUsersName } from "../lib/users";
 import { useQueryClient } from "react-query";
-import { GameState } from "../lib/game";
-
-type GameCompletedProps = {
-  gameState: GameState;
-  setGameState: Dispatch<SetStateAction<GameState>>;
-};
+import { GameStateProps } from "../lib/game";
 
 export default function GameCompleted({
   gameState,
   setGameState,
-}: GameCompletedProps) {
+}: GameStateProps) {
   const [submittedHighscore, setSubmittedHighscore] = useState(false);
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
