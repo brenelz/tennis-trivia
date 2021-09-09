@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Player, uniqueCountries, getPlayers } from "../lib/players";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-import { GameState, GameStateContext } from "../lib/game";
+import { GameStateContext, initialGameState } from "../lib/game";
 import GameCompleted from "../components/GameCompleted";
 import PlayerCard from "../components/PlayerCard";
 import { GetServerSideProps } from "next";
@@ -10,13 +10,6 @@ import { useQuery } from "react-query";
 
 type GameProps = {
   countries: string[];
-};
-
-const initialGameState: GameState = {
-  currentStep: 0,
-  score: 0,
-  pickedCountry: "",
-  status: null,
 };
 
 export default function Game({ countries }: GameProps) {
@@ -43,7 +36,7 @@ export default function Game({ countries }: GameProps) {
           <GameCompleted />
         )}
       </div>
-    </GameState.Provider>
+    </GameStateContext.Provider>
   );
 }
 

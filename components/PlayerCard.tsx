@@ -1,5 +1,6 @@
 import { Player } from "../lib/players";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { GameStateContext } from "../lib/game";
 
 type PlayerCardProps = {
   countries: string[];
@@ -8,6 +9,7 @@ type PlayerCardProps = {
 
 export default function PlayerCard({ countries, player }: PlayerCardProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { gameState, setGameState } = useContext(GameStateContext);
 
   useEffect(() => {
     inputRef?.current?.focus();
@@ -21,7 +23,7 @@ export default function PlayerCard({ countries, player }: PlayerCardProps) {
         ...gameState,
         status: {
           status: "correct",
-          country: player.country,
+          country: player?.country,
         },
         score: gameState.score + 1,
       });

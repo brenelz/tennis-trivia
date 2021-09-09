@@ -1,16 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { supabase } from "../utils/supabase";
 import { addHighscore, getHighScores } from "../lib/highscores";
 import { getLoggedinUsersName } from "../lib/users";
 import { useQueryClient } from "react-query";
-import { GameStateProps } from "../lib/game";
+import { GameStateContext } from "../lib/game";
 
-export default function GameCompleted({
-  gameState,
-  setGameState,
-}: GameStateProps) {
+export default function GameCompleted() {
   const [submittedHighscore, setSubmittedHighscore] = useState(false);
   const [name, setName] = useState("");
+  const { gameState, setGameState } = useContext(GameStateContext);
+
   const queryClient = useQueryClient();
 
   useEffect(() => {

@@ -21,4 +21,19 @@ export type GameStateProps = {
   setGameState: Dispatch<SetStateAction<GameState>>;
 };
 
-export const GameStateContext = createContext(null);
+export const initialGameState: GameState = {
+  currentStep: 0,
+  score: 0,
+  pickedCountry: "",
+  status: null,
+};
+
+export type GameStateContextType = {
+  gameState: GameState;
+  setGameState: Dispatch<SetStateAction<GameState>>;
+};
+
+export const GameStateContext = createContext<GameStateContextType>({
+  gameState: initialGameState,
+  setGameState: () => {},
+});
