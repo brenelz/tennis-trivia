@@ -1,16 +1,9 @@
 import { useEffect } from "react";
-import { getHighScores, Highscore } from "../lib/highscores";
-import Highscores from "../components/Highscores";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import { signIn } from "../lib/auth";
-import { GetServerSideProps } from "next";
 
-type HomeProps = {
-  highscores: Highscore[];
-};
-
-export default function Home({ highscores }: HomeProps) {
+export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
@@ -18,31 +11,17 @@ export default function Home({ highscores }: HomeProps) {
     if (session) {
       router.push("/game");
     }
-  }, []);
+  }, [router]);
 
   return (
-    <div>
-      <div>
-        <button
-          autoFocus
-          onClick={signIn}
-          className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 sm:w-auto"
-        >
-          Login to Play
-        </button>
-      </div>
-
-      <Highscores highscores={highscores} />
-    </div>
+    <>
+      <button
+        autoFocus
+        onClick={signIn}
+        className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 sm:w-auto"
+      >
+        Login to Play
+      </button>
+    </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const highscores = await getHighScores();
-
-  return {
-    props: {
-      highscores,
-    },
-  };
-};

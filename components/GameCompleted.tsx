@@ -2,20 +2,20 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { supabase } from "../utils/supabase";
 import { addHighscore, getHighScores, Highscore } from "../lib/highscores";
 import { getLoggedinUsersName } from "../lib/users";
+import { useQueryClient } from "react-query";
 
 type GameCompletedProps = {
   score: number;
-  setHighscoresData: Dispatch<SetStateAction<Highscore[]>>;
   playAgain: () => Promise<void>;
 };
 
 export default function GameCompleted({
   score,
-  setHighscoresData,
   playAgain,
 }: GameCompletedProps) {
   const [submittedHighscore, setSubmittedHighscore] = useState(false);
   const [name, setName] = useState("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     async function getName() {
@@ -37,7 +37,7 @@ export default function GameCompleted({
 
       const highscores = await getHighScores();
       if (highscores) {
-        setHighscoresData(highscores);
+        queryClient.invalidateQueries("highscores");
         setSubmittedHighscore(true);
       }
     }

@@ -1,12 +1,17 @@
 import { AppProps } from "next/app";
+import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";
-import Main from "../layouts/main";
+import Main from "../layouts/Main";
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Main>
-      <Component {...pageProps} />
-    </Main>
+    <QueryClientProvider client={queryClient}>
+      <Main>
+        <Component {...pageProps} />
+      </Main>
+    </QueryClientProvider>
   );
 }
 

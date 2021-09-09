@@ -3,7 +3,7 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 
 type PlayerCardProps = {
   countries: string[];
-  player: Player;
+  player: Player | undefined;
   score: number;
   currentStep: number;
   nextStep: () => void;
@@ -39,7 +39,7 @@ export default function PlayerCard({
         What country is the following tennis player from?
       </p>
       <h2 className="text-lg font-extrabold text-white my-5">
-        {player.full_name}
+        {player?.full_name}
       </h2>
 
       {status && (
