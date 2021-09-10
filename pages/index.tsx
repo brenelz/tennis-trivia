@@ -1,27 +1,41 @@
-import { useEffect } from "react";
-import { supabase } from "../utils/supabase";
-import { useRouter } from "next/router";
-import { signIn } from "../lib/auth";
+import { useState } from "react";
+import { Player, uniqueCountries, top100Players } from "../lib/players";
+import { GameStateContext, initialGameState } from "../lib/game";
+import GameCompleted from "../components/GameCompleted";
+import PlayerCard from "../components/PlayerCard";
+import { GetServerSideProps } from "next";
 
-export default function Home() {
-  const router = useRouter();
+type GameProps = {
+  countries: string[];
+  players: Player[];
+};
 
-  useEffect(() => {
-    const session = supabase.auth.session();
-    if (session) {
-      router.push("/game");
-    }
-  }, [router]);
+export default function Game({ players, countries }: GameProps) {
+  const [gameState, setGameState] = useState(initialGameState);
+
+  const player = players[gameState.currentStep];
 
   return (
-    <>
-      <button
-        autoFocus
-        onClick={signIn}
-        className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 sm:w-auto"
-      >
-        Login to Play
-      </button>
-    </>
+    <GameStateContext.Provider value={{ gameState, setGameState }}>
+      <div>
+        {player ? (
+          <PlayerCard countries={countries} player={player} />
+        ) : (
+          <GameCompleted />
+        )}
+      </div>
+    </GameStateContext.Provider>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const randomizedPlayers = top100Players.sort((a, b) => 0.5 - Math.random());
+  const top5Players = randomizedPlayers.slice(0, 5);
+
+  return {
+    props: {
+      countries: uniqueCountries,
+      players: top5Players,
+    },
+  };
+};
