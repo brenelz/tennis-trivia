@@ -15,10 +15,10 @@ NEXT_PUBLIC_API_URL=https://your-netlify-url.app
 - shows one player name randomly, and the user must pick their country
 - 5 rounds, keep track of score
 - grabs top 100 tennis players with country
+- have users login with supabase
+- store highscores in supabase
 
 ## Future improvements
 
-- have users login with supabase
-- store highscores in supabase
 - choose difficulty (would change the rank of players selected)
 - challenge other users
