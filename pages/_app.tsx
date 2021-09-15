@@ -1,7 +1,7 @@
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "tailwindcss/tailwind.css";
-import Main from "../layouts/Main";
+import Main from "../layouts/main";
 
 const queryClient = new QueryClient();
 
