@@ -18,7 +18,7 @@ NEXT_PUBLIC_API_URL=https://your-netlify-url.app
 
 ## Future improvements
 
-- have users login with supabase
-- store highscores in supabase
+- have users login with Supabase
+- store highscores in Supabase
 - choose difficulty (would change the rank of players selected)
 - challenge other users
