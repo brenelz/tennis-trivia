@@ -1,6 +1,6 @@
 # Tennis Trivia - Next.js Netlify
 
-This repo is accompanied by an article on how it was built. There is a `start` branch for you if you want to follow along.
+This repo is accompanied by [an article on CSS Tricks](https://css-tricks.com/building-a-tennis-trivia-app-with-next-js-and-netlify/) on how it was built. There is a `start` branch for you if you want to follow along.
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/brenelz/tennis-trivia)
 
