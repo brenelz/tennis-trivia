@@ -1,38 +1,28 @@
-import { useEffect, useRef, useState } from "react";
-import { Player, uniqueCountries, top100Players } from "../lib/players";
+import { useState } from "react";
+import GameStep from "../components/GameStep";
+import { Player, top100Players } from "../lib/players";
 
 type HomeProps = {
   players: Player[];
   countries: string[];
 };
 
-export default function Home({ players, countries }: HomeProps) {
+export default function Home({ players }: HomeProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [score, setScore] = useState(0);
-  const [pickedCountry, setPickedCountry] = useState("");
   const [playersData, setPlayersData] = useState(players);
-  const [status, setStatus] = useState(null);
-  const inputRef = useRef(null);
 
   const player = playersData[currentStep];
 
-  const guessCountry = () => {
-    if (player.country.toLowerCase() === pickedCountry.toLowerCase()) {
-      setStatus({ status: "correct", country: player.country });
-      setScore(score + 1);
-    } else {
-      setStatus({ status: "incorrect", country: player.country });
-    }
-  };
+  const increaseScore = () => {
+    setScore(score + 1);
+  }
 
   const nextStep = () => {
-    setPickedCountry("");
     setCurrentStep(currentStep + 1);
-    setStatus(null);
   };
 
   const playAgain = async () => {
-    setPickedCountry("");
     setPlayersData([]);
     const response = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/api/newGame"
@@ -42,10 +32,6 @@ export default function Home({ players, countries }: HomeProps) {
     setCurrentStep(0);
     setScore(0);
   };
-
-  useEffect(() => {
-    inputRef?.current?.focus();
-  }, [currentStep]);
 
   return (
     <div className="bg-blue-500">
@@ -63,54 +49,12 @@ export default function Home({ players, countries }: HomeProps) {
               {player.full_name}
             </h2>
 
-            {status && (
-              <div className="mt-4 text-lg leading-6 text-white">
-                <p>
-                  You are {status.status}. It is {status.country}{" "}
-                </p>
-                <p>
-                  <button
-                    autoFocus
-                    onClick={nextStep}
-                    className="outline-none mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 sm:w-auto"
-                  >
-                    Next Player
-                  </button>
-                </p>
-              </div>
-            )}
-
-            {!status && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  guessCountry();
-                }}
-              >
-                <input
-                  list="countries"
-                  type="text"
-                  value={pickedCountry}
-                  onChange={(e) => setPickedCountry(e.target.value)}
-                  ref={inputRef}
-                  className="p-2 outline-none"
-                  placeholder="Choose Country"
-                />
-                <datalist id="countries">
-                  {countries.map((country, i) => (
-                    <option key={i}>{country}</option>
-                  ))}
-                </datalist>
-                <p>
-                  <button
-                    className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 sm:w-auto"
-                    type="submit"
-                  >
-                    Guess
-                  </button>
-                </p>
-              </form>
-            )}
+            <GameStep
+              key={currentStep}
+              increaseScore={increaseScore}
+              playerCountry={player.country}
+              nextStep={nextStep}
+            />
 
             <p className="mt-4 text-lg leading-6 text-white">
               <strong>Current score:</strong> {score}
@@ -138,8 +82,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      players: top5Players,
-      countries: uniqueCountries,
+      players: top5Players
     },
   };
 }
