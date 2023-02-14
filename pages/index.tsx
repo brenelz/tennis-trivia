@@ -1,6 +1,6 @@
 import { useState } from "react";
-import GameStep from "../components/GameStep";
 import { Player, top100Players } from "../lib/players";
+import PlayGame from "../components/PlayGame";
 
 type HomeProps = {
   players: Player[];
@@ -9,28 +9,21 @@ type HomeProps = {
 
 export default function Home({ players }: HomeProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [score, setScore] = useState(0);
   const [playersData, setPlayersData] = useState(players);
 
   const player = playersData[currentStep];
-
-  const increaseScore = () => {
-    setScore(score + 1);
-  }
 
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
   };
 
   const playAgain = async () => {
-    setPlayersData([]);
     const response = await fetch(
       process.env.NEXT_PUBLIC_API_URL + "/api/newGame"
     );
     const data = await response.json();
     setPlayersData(data.players);
     setCurrentStep(0);
-    setScore(0);
   };
 
   return (
@@ -41,25 +34,7 @@ export default function Home({ players }: HomeProps) {
         </h2>
 
         {player ? (
-          <div>
-            <p className="mt-4 text-lg leading-6 text-blue-200">
-              What country is the following tennis player from?
-            </p>
-            <h2 className="text-lg font-extrabold text-white my-5">
-              {player.full_name}
-            </h2>
-
-            <GameStep
-              key={currentStep}
-              increaseScore={increaseScore}
-              playerCountry={player.country}
-              nextStep={nextStep}
-            />
-
-            <p className="mt-4 text-lg leading-6 text-white">
-              <strong>Current score:</strong> {score}
-            </p>
-          </div>
+          <PlayGame player={player} currentStep={currentStep} nextStep={nextStep} />
         ) : (
           <div>
             <button
